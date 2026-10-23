@@ -47,6 +47,14 @@ a { color: inherit; }
 .top nav a { text-decoration: none; color: var(--muted); }
 .top nav a:hover { color: var(--text); }
 
+.top nav a.lang {
+  padding: 3px 9px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
 .btn {
   display: inline-block;
   padding: 12px 22px;
@@ -116,6 +124,6 @@ footer {
 }
 
 @media (max-width: 560px) {
-  .top nav a:not(.btn) { display: none; }
+  .top nav a:not(.btn):not(.lang) { display: none; }
   .hero { padding: 64px 0 48px; }
 }
