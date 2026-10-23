@@ -43,7 +43,7 @@ a { color: inherit; }
   border-bottom: 1px solid var(--border);
 }
 .brand { display: inline-flex; align-items: center; gap: 10px; font-weight: 700; font-size: 20px; text-decoration: none; }
-.brand img { border-radius: 7px; }
+.brand img { display: block; flex: none; vertical-align: middle; border-radius: 7px; }
 .top nav { display: flex; align-items: center; gap: 20px; }
 .top nav a { text-decoration: none; color: var(--muted); }
 .top nav a:hover { color: var(--text); }
