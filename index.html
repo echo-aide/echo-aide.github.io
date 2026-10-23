@@ -21,7 +21,7 @@
   <link rel="alternate" hreflang="uk" href="https://echo-aide.github.io/">
   <link rel="alternate" hreflang="en" href="https://echo-aide.github.io/en/">
   <link rel="alternate" hreflang="x-default" href="https://echo-aide.github.io/en/">
-  <link rel="stylesheet" href="style.css?v=7">
+  <link rel="stylesheet" href="style.css?v=8">
 </head>
 <body>
   <header class="top">
@@ -47,16 +47,25 @@
       <p class="hotkeys"><kbd>Ctrl</kbd>+<kbd>Space</kbd> — голос · <kbd>Alt</kbd>+<kbd>Space</kbd> — текст</p>
     </section>
 
-    <section class="section shots" aria-label="Скріншоти">
-      <div class="shots-grid">
-        <figure class="shot">
-          <img src="assets/screens/home-widgets.webp" alt="Головний екран Ехо з віджетами та рядком запиту" width="1278" height="922" loading="lazy">
+    <section class="section shots" aria-roledescription="carousel" aria-label="Скріншоти">
+      <div class="carousel-track" tabindex="0">
+        <figure class="shot" role="group" aria-roledescription="slide" aria-label="1 / 3">
+          <img src="assets/screens/home-widgets.webp" alt="Головний екран Ехо з віджетами та рядком запиту" width="1278" height="922">
           <figcaption><strong>Віджети під рукою</strong>Пошук файлів, таймери, погода, курси валют та інші утиліти на одному екрані.</figcaption>
         </figure>
-        <figure class="shot">
+        <figure class="shot" role="group" aria-roledescription="slide" aria-label="2 / 3">
+          <img src="assets/screens/chat-answer.webp" alt="Запитання «Що таке Атлантида?» і відповідь Ехо під рядком запиту" width="1278" height="925" loading="lazy">
+          <figcaption><strong>Відповіді в одному вікні</strong>Ехо відповідає просто під рядком запиту: з форматуванням і копіюванням в один клік.</figcaption>
+        </figure>
+        <figure class="shot" role="group" aria-roledescription="slide" aria-label="3 / 3">
           <img src="assets/screens/settings-ollama.webp" alt="Налаштування Ехо: локальна модель Ollama і резервний режим" width="1278" height="925" loading="lazy">
           <figcaption><strong>Хмара або локально</strong>Обирайте Gemini, OpenAI, Claude, Ollama чи LM Studio, а Smart Offline Fallback перемкнеться на локальну модель при збої.</figcaption>
         </figure>
+      </div>
+      <div class="carousel-nav">
+        <button class="car-btn" type="button" data-dir="-1" aria-label="Попередній скріншот"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
+        <div class="car-dots"><button class="car-dot" type="button" aria-label="Скріншот 1"></button><button class="car-dot" type="button" aria-label="Скріншот 2"></button><button class="car-dot" type="button" aria-label="Скріншот 3"></button></div>
+        <button class="car-btn" type="button" data-dir="1" aria-label="Наступний скріншот"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button>
       </div>
     </section>
 
@@ -116,5 +125,34 @@
   <footer>
     <p>© 2026 Ехо. Зроблено в Україні.</p>
   </footer>
+  <script>
+    (function () {
+      var root = document.querySelector('.shots');
+      if (!root) return;
+      var track = root.querySelector('.carousel-track');
+      var slides = track.children;
+      var dots = root.querySelectorAll('.car-dot');
+      function index() { return Math.round(track.scrollLeft / track.clientWidth); }
+      function go(i) {
+        i = Math.max(0, Math.min(slides.length - 1, i));
+        track.scrollTo({ left: i * track.clientWidth });
+      }
+      function sync() {
+        var i = index();
+        dots.forEach(function (d, n) { d.setAttribute('aria-current', n === i ? 'true' : 'false'); });
+      }
+      track.addEventListener('scroll', sync, { passive: true });
+      window.addEventListener('resize', sync);
+      dots.forEach(function (d, n) { d.addEventListener('click', function () { go(n); }); });
+      root.querySelectorAll('.car-btn').forEach(function (b) {
+        b.addEventListener('click', function () { go(index() + Number(b.dataset.dir)); });
+      });
+      track.addEventListener('keydown', function (e) {
+        if (e.key === 'ArrowRight') { go(index() + 1); e.preventDefault(); }
+        if (e.key === 'ArrowLeft') { go(index() - 1); e.preventDefault(); }
+      });
+      sync();
+    })();
+  </script>
 </body>
 </html>

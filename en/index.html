@@ -21,7 +21,7 @@
   <link rel="alternate" hreflang="uk" href="https://echo-aide.github.io/">
   <link rel="alternate" hreflang="en" href="https://echo-aide.github.io/en/">
   <link rel="alternate" hreflang="x-default" href="https://echo-aide.github.io/en/">
-  <link rel="stylesheet" href="../style.css?v=7">
+  <link rel="stylesheet" href="../style.css?v=8">
 </head>
 <body>
   <header class="top">
@@ -47,16 +47,25 @@
       <p class="hotkeys"><kbd>Ctrl</kbd>+<kbd>Space</kbd> — voice · <kbd>Alt</kbd>+<kbd>Space</kbd> — text</p>
     </section>
 
-    <section class="section shots" aria-label="Screenshots">
-      <div class="shots-grid">
-        <figure class="shot">
-          <img src="../assets/screens/home-widgets.webp" alt="Echo home screen with widgets and the query bar" width="1278" height="922" loading="lazy">
+    <section class="section shots" aria-roledescription="carousel" aria-label="Screenshots">
+      <div class="carousel-track" tabindex="0">
+        <figure class="shot" role="group" aria-roledescription="slide" aria-label="1 / 3">
+          <img src="../assets/screens/home-widgets.webp" alt="Echo home screen with widgets and the query bar" width="1278" height="922">
           <figcaption><strong>Widgets at your fingertips</strong>File search, timers, weather, exchange rates and more utilities on a single screen.</figcaption>
         </figure>
-        <figure class="shot">
+        <figure class="shot" role="group" aria-roledescription="slide" aria-label="2 / 3">
+          <img src="../assets/screens/chat-answer.webp" alt="The question “What is Atlantis?” and Echo’s answer below the query bar" width="1278" height="925" loading="lazy">
+          <figcaption><strong>Answers in one window</strong>Echo replies right under the query bar, with formatting and one-click copy.</figcaption>
+        </figure>
+        <figure class="shot" role="group" aria-roledescription="slide" aria-label="3 / 3">
           <img src="../assets/screens/settings-ollama.webp" alt="Echo settings: local Ollama model and offline fallback" width="1278" height="925" loading="lazy">
           <figcaption><strong>Cloud or local</strong>Pick Gemini, OpenAI, Claude, Ollama or LM Studio. Smart Offline Fallback switches to a local model when the network fails.</figcaption>
         </figure>
+      </div>
+      <div class="carousel-nav">
+        <button class="car-btn" type="button" data-dir="-1" aria-label="Previous screenshot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
+        <div class="car-dots"><button class="car-dot" type="button" aria-label="Screenshot 1"></button><button class="car-dot" type="button" aria-label="Screenshot 2"></button><button class="car-dot" type="button" aria-label="Screenshot 3"></button></div>
+        <button class="car-btn" type="button" data-dir="1" aria-label="Next screenshot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button>
       </div>
     </section>
 
@@ -116,5 +125,34 @@
   <footer>
     <p>© 2026 Echo. Made in Ukraine.</p>
   </footer>
+  <script>
+    (function () {
+      var root = document.querySelector('.shots');
+      if (!root) return;
+      var track = root.querySelector('.carousel-track');
+      var slides = track.children;
+      var dots = root.querySelectorAll('.car-dot');
+      function index() { return Math.round(track.scrollLeft / track.clientWidth); }
+      function go(i) {
+        i = Math.max(0, Math.min(slides.length - 1, i));
+        track.scrollTo({ left: i * track.clientWidth });
+      }
+      function sync() {
+        var i = index();
+        dots.forEach(function (d, n) { d.setAttribute('aria-current', n === i ? 'true' : 'false'); });
+      }
+      track.addEventListener('scroll', sync, { passive: true });
+      window.addEventListener('resize', sync);
+      dots.forEach(function (d, n) { d.addEventListener('click', function () { go(n); }); });
+      root.querySelectorAll('.car-btn').forEach(function (b) {
+        b.addEventListener('click', function () { go(index() + Number(b.dataset.dir)); });
+      });
+      track.addEventListener('keydown', function (e) {
+        if (e.key === 'ArrowRight') { go(index() + 1); e.preventDefault(); }
+        if (e.key === 'ArrowLeft') { go(index() - 1); e.preventDefault(); }
+      });
+      sync();
+    })();
+  </script>
 </body>
 </html>

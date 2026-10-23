@@ -132,25 +132,64 @@ footer {
 }
 
 .shots { padding-top: 8px; }
-.shots-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 440px), 1fr));
-  gap: 0 24px;
+.carousel-track {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  max-width: 980px;
+  margin: 0 auto;
 }
+.carousel-track::-webkit-scrollbar { display: none; }
+.carousel-track:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 4px; border-radius: 18px; }
 .shot {
+  flex: 0 0 100%;
   margin: 0;
-  display: grid;
-  grid-row: span 2;
-  grid-template-rows: subgrid;
+  padding: 12px 32px 8px;
+  scroll-snap-align: center;
 }
 .shot img {
   display: block;
   width: 100%;
   height: auto;
-  align-self: center;
   border-radius: 18px;
   border: 1px solid var(--border);
   box-shadow: 0 24px 60px -20px rgba(99, 102, 241, 0.35), 0 8px 24px rgba(0, 0, 0, 0.25);
 }
-.shot figcaption { margin: 14px 0 28px; color: var(--muted); font-size: 15px; text-align: center; }
+.shot figcaption { margin-top: 18px; color: var(--muted); font-size: 15px; text-align: center; }
 .shot figcaption strong { display: block; color: var(--text); font-size: 16px; margin-bottom: 2px; }
+
+.carousel-nav { display: flex; align-items: center; justify-content: center; gap: 18px; margin-top: 12px; }
+.car-btn {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  background: var(--bg-2);
+  color: var(--text);
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.car-btn:hover { border-color: var(--accent-2); }
+.car-btn svg { width: 18px; height: 18px; }
+.car-dots { display: flex; gap: 10px; }
+.car-dot {
+  width: 9px;
+  height: 9px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: var(--border);
+  box-shadow: inset 0 0 0 1px var(--muted);
+  cursor: pointer;
+  transition: background 0.15s, transform 0.15s;
+}
+.car-dot[aria-current="true"] { background: var(--accent-2); box-shadow: none; transform: scale(1.25); }
+.car-btn:focus-visible, .car-dot:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 3px; }
+
+@media (max-width: 560px) { .shot { padding-inline: 4px; } }
+@media (prefers-reduced-motion: reduce) { .carousel-track { scroll-behavior: auto; } }
